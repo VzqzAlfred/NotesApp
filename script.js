@@ -12,7 +12,7 @@ function saveTask(e){       //`e` es una varibale para que al momento de ponerle
     const task = {
         title,          // = title: title
         description     // description: description 
-    }
+    };
 
     // console.log(task)
 
@@ -37,7 +37,8 @@ function saveTask(e){       //`e` es una varibale para que al momento de ponerle
     }
     
 
-    getTasks()
+    getTasks()         // Para que pueda guardar distintos
+    document.getElementById(`formTask`).reset()         //Para que cada que se crea un nuevo campo se resete y no permanezca el texto
     e.preventDefault()
 }
 
@@ -45,24 +46,39 @@ function getTasks(){
     let tasks = JSON.parse(localStorage.getItem(`tasks`));
     let taskView = document.getElementById(`tasks`);
 
-    taskView.innerHTML = ``; 
+    taskView.innerHTML = ``
 
-    for (let i = 0; i < tasks-1; i++) {
-        let title = tasks[i].title
-        let description = tasks.description
+        // Para que vaya recorriendo cada posición de 
+    for (let i of tasks) {
+        let title = i.title
+        let description = i.description
 
+                // +=  para que cada tarea cada vez que se recorra se vaya agregando al tasksView
         taskView.innerHTML += `
-        <div class="card">
+        <div class="card ml-5 mb-4">
             <div class="card-body">
-                <p>${title} - ${description}</p>
-                <a class="btn btn-danger">Borrar</a>
+                <p><h3>${title}</h3> - <i>${description}</i></p>
+                <a class="btn btn-warning" onclick="deleteTask('${title}')">Delete</a>
             </div>
         </div>
         `
-        console.log(tasks[i]);
+        console.log(i);
     }
 
 }
 
+
+function deleteTask(title){
+    let tasks = JSON.parse(localStorage.getItem('tasks'))
+
+    for(let tareas of tasks){
+        if (tareas.title == title){
+            tasks.splice(tareas, 1)
+        }
+    }
+
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+    getTasks()
+}
 
 getTasks()
